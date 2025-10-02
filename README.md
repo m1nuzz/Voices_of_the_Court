@@ -2,7 +2,7 @@
 
 Voices of the Court is a Crusader Kings 3 mod which integrates Large Language Models into the game. It lets you hold conversations with the characters and also impact the game state to an extend.
 
-This fork includes additional support for Google Gemini from Google.
+This fork includes additional support for Gemini from Google.
 
 Documentation: https://docs.voicesofthecourt.app
 
