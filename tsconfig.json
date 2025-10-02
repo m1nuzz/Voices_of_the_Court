@@ -108,6 +108,8 @@
                             /* Skip type checking all .d.ts files. */
   },
   "exclude": [
-    "out"
+    "out",
+    "tests",
+    "dist"
   ]
 }

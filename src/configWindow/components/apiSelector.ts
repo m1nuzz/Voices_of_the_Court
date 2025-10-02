@@ -16,6 +16,7 @@ function defineTemplate(label: string){
             <option value="openrouter">OpenRouter</option>
             <option value="ooba">Text Gen WebUI (ooba)</option>
             <option value="openai">OpenAI</option>
+            <option value="google">Google AI</option>
             <option value="custom">Custom (OpenAI-compatible)</option>
         </select> 
     </div>
@@ -36,6 +37,21 @@ function defineTemplate(label: string){
                 <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Recommended)</option>
                 <option value="gpt-4o">GPT-4-o</option>
             </select>
+            </div>
+        </div>
+
+        <div id="google-menu">
+            <h2>Google</h2>
+
+            <div class="input-group">
+            <label for="api-key">API Key</label>
+            <br>
+            <input type="password" id="google-key">
+            </div>
+        
+            <div class="input-group">
+            <label for="google-model-input">Model</label>
+            <input type="text" id="google-model-input">
             </div>
         </div>
 
@@ -115,9 +131,13 @@ class ApiSelector extends HTMLElement{
     oobaDiv: HTMLDivElement
     openrouterDiv: HTMLDivElement 
     customDiv: HTMLDivElement 
+    googleDiv: HTMLDivElement 
 
     openaiKeyInput: HTMLInputElement 
     openaiModelSelect: HTMLSelectElement 
+
+    googleKeyInput: HTMLInputElement 
+    googleModelInput: HTMLInputElement 
 
     oobaUrlInput: HTMLSelectElement 
     oobaUrlConnectButton: HTMLInputElement 
@@ -155,9 +175,13 @@ class ApiSelector extends HTMLElement{
         this.oobaDiv = this.shadow.querySelector("#ooba-menu")!;
         this.openrouterDiv = this.shadow.querySelector("#openrouter-menu")!;
         this.customDiv = this.shadow.querySelector("#custom-menu")!;
+        this.googleDiv = this.shadow.querySelector("#google-menu")!;
 
         this.openaiKeyInput = this.shadow.querySelector("#openai-key")!;
         this.openaiModelSelect = this.shadow.querySelector("#openai-model-select")!;
+
+        this.googleKeyInput = this.shadow.querySelector("#google-key")!;
+        this.googleModelInput = this.shadow.querySelector("#google-model-input")!;
 
         this.oobaUrlInput = this.shadow.querySelector("#ooba-url")!;
         this.oobaUrlConnectButton = this.shadow.querySelector("#ooba-url-connect")!;
@@ -213,6 +237,13 @@ class ApiSelector extends HTMLElement{
             this.openrouterModelInput.value = apiConfig.model;
             
         }
+        else if(apiConfig.type == "google"){
+            
+            this.googleKeyInput.value = apiConfig.key;
+            
+            this.googleModelInput.value = apiConfig.model;
+            
+        }
         else if(apiConfig.type == "custom"){
             this.customUrlInput.value = apiConfig.baseUrl;
             this.customKeyInput.value = apiConfig.key;
@@ -241,6 +272,9 @@ class ApiSelector extends HTMLElement{
                 case 'openrouter': 
                     this.saveOpenrouterConfig();
                 break;
+                case 'google': 
+                    this.saveGoogleConfig();
+                break;
                 case 'custom': 
                     this.saveCustomConfig();
                 break;
@@ -262,6 +296,10 @@ class ApiSelector extends HTMLElement{
 
         this.customDiv.addEventListener("change", (e:any) =>{
             this.saveCustomConfig();
+        })
+        
+        this.googleDiv.addEventListener("change", (e:any) =>{
+            this.saveGoogleConfig();
         })
 
         this.testConnectionButton.addEventListener('click', async (e:any) =>{
@@ -330,24 +368,35 @@ class ApiSelector extends HTMLElement{
                 this.openaiDiv.style.display = "block";
                 this.oobaDiv.style.display = "none";
                 this.openrouterDiv.style.display = "none";
+                this.googleDiv.style.display = "none";
                 this.customDiv.style.display = "none";
                 break;
             case 'ooba':
                 this.openaiDiv.style.display = "none";
                 this.oobaDiv.style.display = "block";
                 this.openrouterDiv.style.display = "none";
+                this.googleDiv.style.display = "none";
                 this.customDiv.style.display = "none";
                 break;
             case 'openrouter':
                 this.openaiDiv.style.display = "none";
                 this.oobaDiv.style.display = "none";
                 this.openrouterDiv.style.display = "block";
+                this.googleDiv.style.display = "none";
+                this.customDiv.style.display = "none";
+                break;
+            case 'google':
+                this.openaiDiv.style.display = "none";
+                this.oobaDiv.style.display = "none";
+                this.openrouterDiv.style.display = "none";
+                this.googleDiv.style.display = "block";
                 this.customDiv.style.display = "none";
                 break;
             case 'custom':
                 this.openaiDiv.style.display = "none";
                 this.oobaDiv.style.display = "none";
                 this.openrouterDiv.style.display = "none";
+                this.googleDiv.style.display = "none";
                 this.customDiv.style.display = "block";
                 break;
         }
@@ -404,6 +453,21 @@ class ApiSelector extends HTMLElement{
         //@ts-ignore
     }   
 
+    saveGoogleConfig(){
+        const newConf = {
+            type: "google",
+            baseUrl: "https://generativelanguage.googleapis.com/v1beta",
+            key: this.googleKeyInput.value,
+            model: this.googleModelInput.value,
+            forceInstruct: false,
+            overwriteContext: this.overwriteContextCheckbox.checked,
+            customContext: this.customContextNumber.value
+        }
+        //ipcRenderer.send('config-change', this.confID, newConf);
+        ipcRenderer.send('config-change-nested', this.confID, "connection", newConf);
+        //@ts-ignore
+    }
+    
     saveCustomConfig(){
         const newConf = {
             type: "custom",

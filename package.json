@@ -13,7 +13,7 @@
   "scripts": {
     "createTypeDefs": "node ./build/createGameDataTypeDefs.js",
     "build": "tsc",
-    "start": "npm run build && electron . --prod",
+    "start": "npm run build && electron .",
     "package": "npm run build && electron-forge package",
     "make": "npm run createTypeDefs && npm run build && electron-forge make",
     "publish": "npm run build && electron-forge publish"
@@ -22,6 +22,7 @@
   "author": "Durond",
   "license": "GNU GPLv3",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@paymoapp/active-window": "^2.1.1",
     "dompurify": "^3.0.8",
     "electron-overlay-window": "^3.3.0",
@@ -36,9 +37,10 @@
     "@electron-forge/maker-rpm": "^7.5.0",
     "@electron-forge/maker-squirrel": "^7.5.0",
     "@electron-forge/maker-zip": "^7.5.0",
-    "electron": "33.0.0",
+    "electron": "38.2.0",
     "source-map-support": "^0.5.21",
-    "ts-to-jsdoc": "^2.4.0"
+    "ts-to-jsdoc": "^2.4.0",
+    "typescript": "^5.9.2"
   },
   "updater": {
     "server": "https://update.electronjs.org",
