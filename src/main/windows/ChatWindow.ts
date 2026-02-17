@@ -1,8 +1,6 @@
 import {  app, BrowserWindow, ipcMain} from "electron";
 import { OverlayController, OVERLAY_WINDOW_OPTS } from 'electron-overlay-window';
-import ActiveWindow from '@paymoapp/active-window';
-
-ActiveWindow.initialize();
+import ActiveWindow from './activeWindowWrapper';
 
 export class ChatWindow{
     window: BrowserWindow;
